@@ -44,12 +44,6 @@ resource "aws_athena_database" "main" {
   encryption_configuration {
     encryption_option = "SSE_S3"
   }
-
-  tags = merge(var.tags, {
-    Name        = "${var.environment}-data-warehouse"
-    Purpose     = "Data Warehouse Database"
-    Service     = "Athena"
-  })
 }
 
 # ========================================
