@@ -70,47 +70,8 @@ resource "aws_iam_role_policy" "glue_s3_access" {
 }
 
 # ========================================
-# GLUE SCRIPT BUCKET
+# GLUE SCRIPT BUCKET CONFIGURATION
 # ========================================
 
-resource "aws_s3_bucket" "glue_scripts" {
-  bucket = "${var.environment}-glue-scripts-${random_string.bucket_suffix.result}"
-
-  tags = merge(var.tags, {
-    Name        = "${var.environment}-glue-scripts"
-    Purpose     = "Glue Scripts Storage"
-    Service     = "Glue"
-  })
-}
-
-resource "random_string" "bucket_suffix" {
-  length  = 8
-  special = false
-  upper   = false
-}
-
-resource "aws_s3_bucket_versioning" "glue_scripts" {
-  bucket = aws_s3_bucket.glue_scripts.id
-  versioning_configuration {
-    status = "Enabled"
-  }
-}
-
-resource "aws_s3_bucket_server_side_encryption_configuration" "glue_scripts" {
-  bucket = aws_s3_bucket.glue_scripts.id
-
-  rule {
-    apply_server_side_encryption_by_default {
-      sse_algorithm = "AES256"
-    }
-  }
-}
-
-resource "aws_s3_bucket_public_access_block" "glue_scripts" {
-  bucket = aws_s3_bucket.glue_scripts.id
-
-  block_public_acls       = true
-  block_public_policy     = true
-  ignore_public_acls      = true
-  restrict_public_buckets = true
-}
+# Note: The glue_scripts bucket is defined in s3.tf
+# This file only contains IAM roles and policies
