@@ -224,10 +224,4 @@ resource "aws_athena_named_query" "sample_queries" {
   database    = aws_athena_database.main.name
   description = each.value.description
   query       = each.value.query
-
-  tags = merge(var.tags, {
-    Name        = "${var.environment}-${each.key}"
-    Purpose     = "Athena Named Query"
-    Service     = "Athena"
-  })
 }

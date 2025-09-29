@@ -49,9 +49,9 @@ output "athena_database_name" {
   value       = aws_athena_database.main.name
 }
 
-output "athena_database_arn" {
-  description = "ARN of the Athena database"
-  value       = aws_athena_database.main.arn
+output "athena_database_id" {
+  description = "ID of the Athena database"
+  value       = aws_athena_database.main.id
 }
 
 output "athena_data_catalog_name" {
