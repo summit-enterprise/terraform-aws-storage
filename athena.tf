@@ -14,7 +14,7 @@ resource "aws_athena_workgroup" "main" {
     publish_cloudwatch_metrics_enabled = true
 
     result_configuration {
-      output_location = "s3://${var.athena_results_bucket}/athena-results/"
+      output_location = var.athena_results_bucket != null ? "s3://${var.athena_results_bucket}/athena-results/" : "s3://${aws_s3_bucket.athena_results[0].bucket}/athena-results/"
 
       encryption_configuration {
         encryption_option = "SSE_S3"
@@ -39,7 +39,7 @@ resource "aws_athena_workgroup" "main" {
 
 resource "aws_athena_database" "main" {
   name   = "${var.environment}_data_warehouse"
-  bucket = var.athena_results_bucket
+  bucket = var.athena_results_bucket != null ? var.athena_results_bucket : aws_s3_bucket.athena_results[0].bucket
 
   encryption_configuration {
     encryption_option = "SSE_S3"
@@ -159,8 +159,8 @@ resource "aws_iam_role_policy" "athena_policy" {
           "s3:PutObject"
         ]
         Resource = [
-          "arn:aws:s3:::${var.athena_results_bucket}",
-          "arn:aws:s3:::${var.athena_results_bucket}/*",
+          var.athena_results_bucket != null ? "arn:aws:s3:::${var.athena_results_bucket}" : "arn:aws:s3:::${aws_s3_bucket.athena_results[0].bucket}",
+          var.athena_results_bucket != null ? "arn:aws:s3:::${var.athena_results_bucket}/*" : "arn:aws:s3:::${aws_s3_bucket.athena_results[0].bucket}/*",
           "arn:aws:s3:::${var.data_lake_bucket_name}",
           "arn:aws:s3:::${var.data_lake_bucket_name}/*"
         ]
